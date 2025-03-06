@@ -42,6 +42,13 @@ class AuthController extends Controller
 
         $token=$user->createToken('Booking')->plainTextToken;
 
-        return response()->json(['message'=>'Login successfully.','token'=>$token,'role'=>$user->role]);
+        return response()->json(['message'=>'Login successfully.','token'=>$token,'role'=>$user->role,'email'=>$user->email,'name'=>$user->name]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json(['message'=>'Logout successfully.']);
     }
 }
