@@ -15,27 +15,15 @@ class AppointmentResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if(Auth::user()->role==='admin'){
             return [
                 'id'=>$this->id,
                 'status'=>$this->status,
                 'start'=>$this->schedule->slot->start,
                 'end'=>$this->schedule->slot->end,
                 'date'=>$this->schedule->date,
-                'name'=>$this->client->name
+                'name'=>Auth::user()->role==='admin'?$this->client->name:$this->schedule->admin->name
             ];
-        }
-
-        if(Auth::user()->role==='client'){
-            return [
-                'id'=>$this->id,
-                'status'=>$this->status,
-                'start'=>$this->schedule->slot->start,
-                'end'=>$this->schedule->slot->end,
-                'date'=>$this->schedule->date,
-                'name'=>$this->schedule->admin->name
-            ];
-        }
+        
 
         return [];       
     }

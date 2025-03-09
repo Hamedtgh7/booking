@@ -13,14 +13,19 @@ class Schedule extends Model
     ];
 
     public function slot(){
-        return $this->belongsTo(Slot::class,'slotId');
+        return $this->belongsTo(Slot::class,'slot_id');
     }
 
     public function admin(){
-        return $this->belongsTo(User::class,'adminId');
+        return $this->belongsTo(User::class,'admin_id');
     }
 
     public function appointments(){
-        return $this->hasMany(Appointment::class,'scheduleId');
+        return $this->hasMany(Appointment::class,'schedule_id');
     }
+
+    protected $casts=[
+        'date'=>'date',
+        'isBooked'=>'boolean'
+    ];
 }

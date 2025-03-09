@@ -16,13 +16,9 @@ class ScheduleResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'adminId'=>$this->adminId,
+            'admin_id'=>$this->adminId,
             'date'=>$this->date,
-            'slot'=>[
-                'id'=>$this->slot->id,
-                'start'=>$this->slot->start,
-                'end'=>$this->slot->end
-            ]
+            'slot'=>new SlotResource($this->slot)
         ];
     }
 }

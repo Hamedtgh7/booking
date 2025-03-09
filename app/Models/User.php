@@ -50,11 +50,21 @@ class User extends Authenticatable
 
     public function schedules()
     {
-        return $this->hasMany(Schedule::class,'adminId');
+        return $this->hasMany(Schedule::class,'admin_id');
     }
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class,'clientId');
+        return $this->hasMany(Appointment::class,'client_id');
+    }
+
+    public function isAdmin():bool
+    {
+        return $this->role==='admin';
+    }
+
+    public function isClient():bool
+    {
+        return $this->role==='client';
     }
 }

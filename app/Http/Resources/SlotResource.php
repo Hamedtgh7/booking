@@ -18,7 +18,6 @@ class SlotResource extends JsonResource
             'id'=>$this->id,
             'startTime'=>$this->start,
             'endTime'=>$this->end,
-            'formatted'=>$this->start. '-'.$this->end
         ];
     }
 }

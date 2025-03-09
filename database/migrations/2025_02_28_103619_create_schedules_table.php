@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('adminId')->constrained('users')->onDelete('cascade');
+            $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
             $table->date('date');
-            $table->foreignId('slotId')->constrained('slots')->onDelete('cascade');
+            $table->foreignId('slot_id')->constrained('slots')->onDelete('cascade');
             $table->boolean('isBooked')->default(false);
             $table->timestamps();
         });

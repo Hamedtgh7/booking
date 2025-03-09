@@ -10,4 +10,9 @@ class Slot extends Model
         'start',
         'end'
     ];
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class,'slot_id');
+    }
 }
