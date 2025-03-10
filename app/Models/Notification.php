@@ -2,19 +2,34 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\DatabaseNotification;
 
-class Notification extends Model
+class Notification extends DatabaseNotification
 {
-    protected $fillable=[
-        'userId',
+    protected $fillable = [
+        'id',
+        'type',
+        'notifiable_type',
+        'notifiable_id',
         'title',
         'message',
-        'isRead'
+        'data',
+        'read_at'
     ];
 
-    public function user()
+    protected $casts = [
+        'data' => 'array',
+        'read_at' => 'datetime',
+    ];
+
+    public function getTitle()
     {
-        return $this->belongsTo(User::class);
+        return $this->data['title'] ?? 'No title';
     }
+
+    public function getMessage()
+    {
+        return $this->date['message'] ?? 'No message';
+    }
+
 }

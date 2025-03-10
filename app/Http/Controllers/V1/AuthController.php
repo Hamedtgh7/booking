@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\LoginAttempt;
 use App\Models\User;
+use App\Notifications\SuspisiousNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\ApiResponse;
@@ -45,6 +47,17 @@ class AuthController extends Controller
             return $this->errorResponse('Invalid credentials',[],Response::HTTP_UNAUTHORIZED);
         }
 
+        $ip=$request->ip();
+
+        LoginAttempt::query()->create([
+            'user_id'=>$user->id,
+            'ip'=>$ip
+        ]);
+
+        if ($this->isSuspicious($user,$ip)){
+            $user->notify(new SuspisiousNotification($user,$ip));
+        }
+
         $token=$user->createToken('Booking')->plainTextToken;
 
         return $this->successResponse('Login successfully',[
@@ -60,5 +73,12 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
 
         return $this->successResponse('Logout successfully',[],Response::HTTP_OK);
+    }
+
+    public function isSuspicious($user,$ip)
+    {
+        $lastIp=LoginAttempt::query()->where('user_id',$user->id)->pluck('id')->toArray();
+
+        return !in_array($ip,$lastIp);
     }
 }

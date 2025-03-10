@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\V1;
 
-use app\Enums\StatusEnum;
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
 use App\Models\Notification;
 use App\Models\Schedule;
 use App\Models\User;
+use App\Notifications\AppointmentStatusNotification;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class AppointmentController extends Controller
     public function store(Request $request):JsonResponse
     {
         if(!Gate::allows('is-client')){
-            $this->errorResponse('Access denied',[],Response::HTTP_FORBIDDEN);
+            return $this->errorResponse('Access denied',[],Response::HTTP_FORBIDDEN);
         }
 
         $data=$request->validate([
@@ -49,6 +50,7 @@ class AppointmentController extends Controller
             $schedule->update([
                 'isBooked'=>true
             ]);
+            $schedule->admin->notify(new AppointmentStatusNotification($appointment));
         });
 
         return $this->successResponse('Appointment created successfully.',$appointment,Response::HTTP_CREATED);
@@ -87,11 +89,11 @@ class AppointmentController extends Controller
             'status'=>$data['status']
         ]);
 
-        // Notification::query()->create([
-        //     'userId'=>$appointment->clientId,
-        //     'title'=>'Appointment status updated.',
-        //     'message'=>"Your Appointment status has been updated: {$appointment->status}"
-        // ]);
+        if (Auth::user()->isAdmin()){
+            $appointment->client->notify(new AppointmentStatusNotification($appointment));
+        }else{
+            $appointment->schedule->admin->notify(new AppointmentStatusNotification($appointment));
+        }
 
         return $this->successResponse('Appoitnment successfully updated.',$appointment,Response::HTTP_OK);
     }

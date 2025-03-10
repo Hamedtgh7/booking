@@ -30,4 +30,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/appointments/{appointment}',[AppointmentController::class,'update']);
     
     Route::get('/notifications',[NotificationController::class,'index']);
+    Route::put('/notifications/{notification}',[NotificationController::class,'update']);
 });
