@@ -58,14 +58,14 @@ class SchedulesController extends Controller
         return $this->successResponse('Schedules retrived successfully',ScheduleResource::collection($schedules),Response::HTTP_OK);
     }
 
-    public function destroy(int $id):JsonResponse
+    public function destroy(Schedule $schedule):JsonResponse
     {
         if(!Gate::allows('is-admin')){
             $this->errorResponse('Access denied',[],Response::HTTP_FORBIDDEN);
         }
         
-        Schedule::where('admin_id',Auth::id())->findOrFail($id)->delete();
+        $schedule->delete();
 
-        return $this->successResponse('Schedule deleted successfully.',[],Response::HTTP_OK);
+        return $this->successResponse('Schedule deleted successfully.',new ScheduleResource($schedule),Response::HTTP_OK);
     }
 }

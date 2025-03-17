@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany(Appointment::class,'client_id');
     }
 
+    public function activities()
+    {
+        return $this->hasMany(UserActivity::class,'user_id');
+    }
+
     public function isAdmin():bool
     {
         return $this->role==='admin';

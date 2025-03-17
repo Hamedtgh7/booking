@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Analytic;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ScheduleResource extends JsonResource
+class UserActivityResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,8 @@ class ScheduleResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'admin_id'=>$this->admin_id,
-            'date'=>$this->date,
-            'slot'=>new SlotResource($this->slot)
+            'description'=>$this->description,
+            'created_at'=>$this->created_at
         ];
     }
 }

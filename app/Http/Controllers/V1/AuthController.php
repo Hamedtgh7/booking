@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\LogActivityJob;
 use App\Models\LoginAttempt;
 use App\Models\User;
 use App\Notifications\SuspisiousNotification;
@@ -24,12 +25,22 @@ class AuthController extends Controller
             'password'=>'required|min:6|max:31',
         ]);
 
-        User::query()->create([
+        $user=User::query()->create([
             'name'=>$data['name'],
             'email'=>$data['email'],
             'password'=>Hash::make($data['password']),
             'role'=>'client'
         ]);
+
+        $user_id=$user->id;
+        $url=$request->path();
+        $method=$request->method();
+        $requestData=$request->all();
+        $responseStatus=201;
+        $action='register';
+        $description="$user->name has registered";
+
+        LogActivityJob::dispatch($user_id,$url,$method,$action, $requestData,$responseStatus,$description);
 
         return $this->successResponse('User registered successfully',[],Response::HTTP_CREATED);
     }
@@ -58,7 +69,17 @@ class AuthController extends Controller
             $user->notify(new SuspisiousNotification($user,$ip));
         }
 
+        $user_id=$user->id;
+        $url=$request->path();
+        $method=$request->method();
+        $requestData=$request->all();
+        $responseStatus=200;
+        $action='login';
+        $description="$user->name has logined";
+
         $token=$user->createToken('Booking')->plainTextToken;
+
+        LogActivityJob::dispatch($user_id,$url,$method,$action, $requestData,$responseStatus,$description);
 
         return $this->successResponse('Login successfully',[
             'token'=>$token,
