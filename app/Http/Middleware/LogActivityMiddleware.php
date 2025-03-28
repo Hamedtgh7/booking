@@ -2,15 +2,13 @@
 
 namespace App\Http\Middleware;
 
-use App\Jobs\LogActivityJob;
 use App\Models\Schedule;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
-
-
+use App\Models\UserActivity;
 
 class LogActivityMiddleware
 {
@@ -31,7 +29,15 @@ class LogActivityMiddleware
         $action=$this->getAction($request);
         $description=$this->getDescription($action,Auth::user());
 
-        LogActivityJob::dispatch($user_id,$url,$method,$action, $requestData,$responseStatus,$description);
+        UserActivity::query()->create([
+            'user_id'=>$user_id,
+            'url'=>$url,
+            'method'=>$method,
+            'action'=>$action,
+            'requestData'=>$requestData,
+            'responseStatus'=>$responseStatus,
+            'description'=>$description
+        ]);
 
         return $response;
     }

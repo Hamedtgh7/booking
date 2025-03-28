@@ -24,5 +24,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('is-admin',fn(User $user)=>$user->isAdmin());
 
         Gate::define('is-client',fn(User $user)=>$user->isClient());
+
+        require base_path('routes/channels.php');
     }
 }

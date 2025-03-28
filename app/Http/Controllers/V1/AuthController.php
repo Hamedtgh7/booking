@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\LogActivityJob;
 use App\Models\LoginAttempt;
 use App\Models\User;
+use App\Models\UserActivity;
 use App\Notifications\SuspisiousNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -40,7 +41,15 @@ class AuthController extends Controller
         $action='register';
         $description="$user->name has registered";
 
-        LogActivityJob::dispatch($user_id,$url,$method,$action, $requestData,$responseStatus,$description);
+        UserActivity::query()->create([
+            'user_id'=>$user_id,
+            'url'=>$url,
+            'method'=>$method,
+            'action'=>$action,
+            'requestData'=>$requestData,
+            'responseStatus'=>$responseStatus,
+            'description'=>$description
+        ]);
 
         return $this->successResponse('User registered successfully',[],Response::HTTP_CREATED);
     }
@@ -79,7 +88,15 @@ class AuthController extends Controller
 
         $token=$user->createToken('Booking')->plainTextToken;
 
-        LogActivityJob::dispatch($user_id,$url,$method,$action, $requestData,$responseStatus,$description);
+        UserActivity::query()->create([
+            'user_id'=>$user_id,
+            'url'=>$url,
+            'method'=>$method,
+            'action'=>$action,
+            'requestData'=>$requestData,
+            'responseStatus'=>$responseStatus,
+            'description'=>$description
+        ]);
 
         return $this->successResponse('Login successfully',[
             'token'=>$token,

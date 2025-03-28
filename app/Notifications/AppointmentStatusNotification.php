@@ -40,17 +40,17 @@ class AppointmentStatusNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-        ->subject('Appointment Status Updated')
-        ->greeting("Hello, {$notifiable->name}")
-        ->line("Your appointment status has been updated.")
-        ->line("**Status:** {$this->appointment->status}")
-        ->line("**Date:** {$this->appointment->date}")
-        ->line("**Time:** {$this->appointment->schedule->slot->start} - {$this->appointment->schedule->slot->end}")
-        ->line('Thank you for using our application!');
-    }
+    // public function toMail(object $notifiable): MailMessage
+    // {
+    //     return (new MailMessage)
+    //     ->subject('Appointment Status Updated')
+    //     ->greeting("Hello, {$notifiable->name}")
+    //     ->line("Your appointment status has been updated.")
+    //     ->line("**Status:** {$this->appointment->status}")
+    //     ->line("**Date:** {$this->appointment->date}")
+    //     ->line("**Time:** {$this->appointment->schedule->slot->start} - {$this->appointment->schedule->slot->end}")
+    //     ->line('Thank you for using our application!');
+    // }
 
     /**
      * Get the array representation of the notification.

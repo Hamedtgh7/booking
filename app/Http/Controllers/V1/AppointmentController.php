@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Enums\StatusEnum;
+use App\Events\AppointmentEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
@@ -50,7 +51,9 @@ class AppointmentController extends Controller
             $schedule->update([
                 'isBooked'=>true
             ]);
-            $schedule->admin->notify(new AppointmentStatusNotification($appointment));
+            // $schedule->admin->notify(new AppointmentStatusNotification($appointment));
+
+            broadcast(new AppointmentEvent($appointment));
         });
 
         return $this->successResponse('Appointment created successfully.',$appointment,Response::HTTP_CREATED);

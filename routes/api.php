@@ -8,6 +8,7 @@ use App\Http\Controllers\V1\NotificationController;
 use App\Http\Controllers\V1\SchedulesController;
 use App\Http\Controllers\V1\SlotController;
 use App\Http\Middleware\LogActivityMiddleware;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('throttle:5,1')->group(function (){
@@ -33,6 +34,8 @@ Route::middleware(['auth:sanctum',LogActivityMiddleware::class])->group(function
     });
 
 });
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
 
 Route::middleware('auth:sanctum')->prefix('analytics')->group(function() {
     Route::get('/popular-slots', [AnalyticController::class, 'popularSlots']);
