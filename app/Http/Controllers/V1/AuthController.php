@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Events\UserOnline;
 use App\Http\Controllers\Controller;
 use App\Jobs\LogActivityJob;
 use App\Models\LoginAttempt;
@@ -98,7 +99,10 @@ class AuthController extends Controller
             'description'=>$description
         ]);
 
+        // broadcast(new UserOnline($user));
+
         return $this->successResponse('Login successfully',[
+            'id'=>$user_id,
             'token'=>$token,
             'role'=>$user->role,
             'email'=>$user->email,
