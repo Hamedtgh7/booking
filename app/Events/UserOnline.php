@@ -35,4 +35,9 @@ class UserOnline implements ShouldBroadcast
             new PresenceChannel('online.users'),
         ];
     }
+
+    public function broadcastAs():string
+    {
+        return 'online.users';
+    }
 }

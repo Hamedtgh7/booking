@@ -10,6 +10,5 @@ Broadcast::channel('appointments.admin.{adminId}',function($user,$adminId){
 });
 
 Broadcast::channel('online.users',function($user){
-    Log::info('problen');
     return ['id'=>$user->id,'name'=>$user->name];
 });
