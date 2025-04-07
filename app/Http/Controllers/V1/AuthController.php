@@ -113,6 +113,8 @@ class AuthController extends Controller
 
     public function logout(Request $request):JsonResponse
     {
+        broadcast(new UserOffline($request->user()));
+
         $request->user()->tokens()->delete();
 
         return $this->successResponse('Logout successfully',[],Response::HTTP_OK);
