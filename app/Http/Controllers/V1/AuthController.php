@@ -10,6 +10,7 @@ use App\Models\LoginAttempt;
 use App\Models\User;
 use App\Models\UserActivity;
 use App\Notifications\SuspisiousNotification;
+use App\Services\OnlineUserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\ApiResponse;
@@ -100,6 +101,8 @@ class AuthController extends Controller
             'description'=>$description
         ]);
 
+        OnlineUserService::add($user);
+
         broadcast(new UserOnline($user));
 
         return $this->successResponse('Login successfully',[
@@ -113,6 +116,8 @@ class AuthController extends Controller
 
     public function logout(Request $request):JsonResponse
     {
+        OnlineUserService::remove($request->user());
+
         broadcast(new UserOffline($request->user()));
 
         $request->user()->tokens()->delete();

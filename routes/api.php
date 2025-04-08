@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\AnalyticController;
 use App\Http\Controllers\V1\AppointmentController;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\NotificationController;
+use App\Http\Controllers\V1\OnlineUserController;
 use App\Http\Controllers\V1\SchedulesController;
 use App\Http\Controllers\V1\SlotController;
 use App\Http\Middleware\LogActivityMiddleware;
@@ -33,6 +34,7 @@ Route::middleware(['auth:sanctum',LogActivityMiddleware::class])->group(function
         Route::get('get-admins-list/{admin}/schedule',[AdminController::class,'getAdminsSchedules']);
     });
 
+    Route::get('/online-users',[OnlineUserController::class,'index']);
 });
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
